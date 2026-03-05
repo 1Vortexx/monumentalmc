@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MonumentalMC — Server Rules</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green: #00ff41;
+      --green-dim: #00c832;
+      --green-dark: #003d10;
+      --green-glow: rgba(0,255,65,0.18);
+      --red: #ff2222;
+      --red-dim: #cc0000;
+      --black: #000000;
+      --bg: #020702;
+      --surface: #060d06;
+      --surface2: #091209;
+      --border: #0c240c;
+      --border-bright: rgba(0,255,65,0.2);
+      --text: #b8f0c0;
+      --muted: #3d6b43;
+      --warn: #ffaa00;
+      --blue: #44aaff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
+      background-size: 16px 16px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── PIXEL BORDERS ── */
+    .pixel-border-top {
+      width: 100%;
+      height: 16px;
+      background-image: repeating-linear-gradient(
+        90deg,
+        #1a5c1a 0px, #1a5c1a 16px, #2d8a2d 16px, #2d8a2d 32px,
+        #0f3d0f 32px, #0f3d0f 48px, #3aaa3a 48px, #3aaa3a 64px,
+        #1a5c1a 64px, #1a5c1a 80px, #0a2e0a 80px, #0a2e0a 96px
+      );
+      image-rendering: pixelated;
+      position: relative; z-index: 2;
+    }
+
+    .pixel-border-dirt {
+      width: 100%;
+      height: 16px;
+      background-image: repeating-linear-gradient(
+        90deg,
+        #5c3d1a 0px, #5c3d1a 16px, #7a5225 16px, #7a5225 32px,
+        #3d2810 32px, #3d2810 48px, #6b4820 48px, #6b4820 64px,
+        #4a3015 64px, #4a3015 80px, #2e1d0a 80px, #2e1d0a 96px
+      );
+      image-rendering: pixelated;
+      position: relative; z-index: 2;
+      margin-bottom: 8px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,30,0,0.95) 0%, rgba(0,10,0,0.98) 100%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 48px 24px 44px;
+    }
+
+    .hero-icon {
+      font-size: 2.8rem;
+      color: var(--green);
+      text-shadow: 0 0 20px var(--green), 0 0 40px rgba(0,255,65,0.3);
+      margin-bottom: 20px;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)}
+    }
+
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1rem, 3.5vw, 1.8rem);
+      color: var(--green);
+      text-shadow: 3px 3px 0 #002200, 0 0 24px rgba(0,255,65,0.5);
+      line-height: 1.7;
+      animation: flicker 10s infinite;
+    }
+
+    @keyframes flicker {
+      0%,94%,100%{opacity:1} 95%{opacity:0.8} 97%{opacity:1} 99%{opacity:0.9}
+    }
+
+    .hero-sub {
+      margin-top: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+    }
+
+    .hero-sub span { color: var(--green-dim); }
+
+    .server-address {
+      display: inline-block;
+      margin-top: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      color: var(--green);
+      border: 1px solid var(--border-bright);
+      padding: 7px 18px;
+      background: rgba(0,255,65,0.05);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── GRIEF BANNER ── */
+    .grief-banner {
+      margin: 0 0 6px;
+      border: 2px solid var(--red);
+      background: rgba(30,0,0,0.7);
+      position: relative;
+      overflow: hidden;
+      animation: redpulse 4s ease-in-out infinite;
+    }
+
+    @keyframes redpulse {
+      0%,100%{ box-shadow: 0 0 0 rgba(255,34,34,0); border-color: #ff2222; }
+      50%{ box-shadow: 0 0 28px rgba(255,34,34,0.3); border-color: #ff5555; }
+    }
+
+    .grief-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 12px,
+        rgba(255,0,0,0.03) 12px, rgba(255,0,0,0.03) 24px
+      );
+    }
+
+    .grief-banner-header {
+      background: var(--red);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .grief-banner-header i { font-size: 1rem; color: #000; }
+
+    .grief-banner-header span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #000;
+      letter-spacing: 0.04em;
+      flex: 1;
+      text-align: center;
+    }
+
+    .grief-banner-body {
+      padding: 28px 32px;
+      position: relative; z-index: 1;
+    }
+
+    .grief-banner-body p {
+      font-size: 15px;
+      color: #dda0a0;
+      line-height: 1.85;
+    }
+
+    .grief-banner-body p + p { margin-top: 14px; }
+
+    .grief-banner-body strong { color: #ff7777; font-weight: 700; }
+
+    .verdict-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      background: var(--red);
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      padding: 8px 14px;
+      letter-spacing: 0.05em;
+      line-height: 1.8;
+    }
+
+    /* ── PREAMBLE ── */
+    .preamble {
+      margin: 6px 0 0;
+      padding: 24px 28px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--green);
+      background: var(--surface);
+      position: relative;
+    }
+
+    .preamble::before {
+      content: '// WELCOME, WHITELIST MEMBER';
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--green);
+      position: absolute;
+      top: -8px; left: 16px;
+      background: var(--bg);
+      padding: 0 8px;
+    }
+
+    .preamble p { font-size: 15px; color: #7aaa80; line-height: 1.85; }
+    .preamble p + p { margin-top: 12px; }
+    .preamble strong { color: var(--green); }
+
+    /* ── MC IMAGE STRIP ── */
+    .mc-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin: 28px 0;
+    }
+
+    .mc-strip-item {
+      aspect-ratio: 16/9;
+      background: #040f04;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mc-strip-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.55) saturate(0.5) hue-rotate(70deg);
+      transition: filter 0.3s, transform 0.3s;
+      display: block;
+    }
+
+    .mc-strip-fallback {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: var(--green-dark);
+      background: repeating-linear-gradient(
+        45deg, #040f04, #040f04 4px, #060f06 4px, #060f06 8px
+      );
+    }
+
+    .mc-strip-item:hover img {
+      filter: brightness(0.75) saturate(0.9) hue-rotate(70deg);
+      transform: scale(1.05);
+    }
+
+    .mc-strip-item .mc-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      padding: 14px 10px 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .mc-strip-item:hover .mc-label { opacity: 1; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin: 36px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label i { color: var(--green); font-size: 11px; }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── RULES ── */
+    .rules-list { display: flex; flex-direction: column; gap: 3px; }
+
+    .rule {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateX(-8px);
+      animation: slideIn 0.4s forwards;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    @keyframes slideIn { to { opacity:1; transform:none; } }
+
+    .rule:nth-child(1)  { animation-delay:0.05s }
+    .rule:nth-child(2)  { animation-delay:0.10s }
+    .rule:nth-child(3)  { animation-delay:0.15s }
+    .rule:nth-child(4)  { animation-delay:0.20s }
+    .rule:nth-child(5)  { animation-delay:0.25s }
+    .rule:nth-child(6)  { animation-delay:0.30s }
+    .rule:nth-child(7)  { animation-delay:0.35s }
+    .rule:nth-child(8)  { animation-delay:0.40s }
+    .rule:nth-child(9)  { animation-delay:0.45s }
+    .rule:nth-child(10) { animation-delay:0.50s }
+    .rule:nth-child(11) { animation-delay:0.55s }
+
+    .rule::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--green-dark);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .rule:hover { border-color: var(--border-bright); background: var(--surface2); }
+    .rule:hover::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+
+    .rule-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px 14px 20px;
+    }
+
+    .rule-icon {
+      width: 36px; height: 36px;
+      background: var(--green-dark);
+      border: 1px solid rgba(0,255,65,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+      color: var(--green);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .rule:hover .rule-icon {
+      background: rgba(0,255,65,0.1);
+      box-shadow: 0 0 8px rgba(0,255,65,0.2);
+    }
+
+    .rule-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 24px;
+    }
+
+    .rule-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--green);
+      letter-spacing: 0.04em;
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .rule-severity {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      padding: 3px 10px;
+      border: 1px solid currentColor;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sev-ban  { color: #ff3333; }
+    .sev-warn { color: var(--warn); }
+    .sev-mute { color: var(--blue); }
+    .sev-case { color: var(--muted); }
+
+    .rule-body {
+      padding: 0 24px 22px 82px;
+      font-size: 15px;
+      color: #6a9a70;
+      line-height: 1.85;
+    }
+
+    .rule-body p + p { margin-top: 10px; }
+    .rule-body strong { color: var(--text); font-weight: 700; }
+    .rule-body .g { color: var(--green); font-weight: 600; }
+    .rule-body .r { color: #ff5555; font-weight: 600; }
+    .rule-body .w { color: var(--warn); font-weight: 600; }
+
+    .penalty-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      background: rgba(255,34,34,0.07);
+      border: 1px solid rgba(255,34,34,0.22);
+      border-left: 3px solid var(--red);
+      padding: 8px 14px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: #ff6666;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 0 0;
+      margin-top: 56px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-brand {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--green);
+      opacity: 0.7;
+      line-height: 2;
+    }
+
+    .footer-note {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-agreement {
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+    }
+
+    .footer-agreement i { color: var(--green); margin-right: 6px; }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--green);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 3px;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .fade-in { opacity:0; animation: fadeUp 0.5s forwards; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+    @media (max-width:640px) {
+      .rule-body { padding-left: 20px; }
+      .rule-severity { display: none; }
+      .mc-strip { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 0.9rem; }
+      .footer-inner { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="pixel-border-top"></div>
+
+  <!-- HERO -->
+  <div class="hero fade-in">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <i class="fa-solid fa-shield-halved hero-icon"></i>
+      <h1>MONUMENTALMC<br>SERVER RULES<span class="cursor"></span></h1>
+      <p class="hero-sub">VERSION 2.0 &nbsp;&nbsp;|&nbsp;&nbsp; EFFECTIVE: <span>IMMEDIATELY</span> &nbsp;&nbsp;|&nbsp;&nbsp; ENFORCEMENT: <span>ABSOLUTE</span></p>
+      <div class="server-address"><i class="fa-solid fa-server" style="margin-right:8px;font-size:10px;"></i>play.monumentalmc.online</div>
+    </div>
+  </div>
+
+  <div class="pixel-border-dirt"></div>
+
+  <!-- GRIEFING BANNER — TOP -->
+  <div class="grief-banner fade-in">
+    <div class="grief-banner-header">
+      <i class="fa-solid fa-skull-crossbones"></i>
+      <i class="fa-solid fa-ban"></i>
+      <span>⚠ GRIEFING &amp; LOOTING — ZERO TOLERANCE — READ THIS BEFORE ANYTHING ELSE ⚠</span>
+      <i class="fa-solid fa-ban"></i>
+      <i class="fa-solid fa-skull-crossbones"></i>
+    </div>
+    <div class="grief-banner-body">
+      <p>
+        Before you scroll past this, before you skim the rules, before you do anything else on this page — understand this with absolute clarity: <strong>griefing and looting are permanently, unconditionally, and irrevocably banned on MonumentalMC.</strong> There is no context. No technicality. No "it was just a prank." No plea deal. No appeal. No second chance. If you grief or loot on this server, you will be permanently banned the moment we confirm it. Don't bother DMing staff. Don't open a ticket. The decision will already be final.
+      </p>
+      <p>
+        You are here because you <strong>earned a whitelist spot</strong>. Someone vouched for your name. You demonstrated loyalty to this community before you ever loaded in. Griefing isn't just a rule violation — it is a direct, personal betrayal of every single player who trusted you enough to share this server with you. It is the digital equivalent of being invited into someone's home and torching it on your way out.
+      </p>
+      <p>
+        Here is the part that should stop you entirely: <strong>we run automated backups.</strong> Everything you destroy, we restore. Every chest you emptied, we refill. Every structure you burned or dismantled gets rebuilt, pixel for pixel, as though you never existed here. Your entire act of destruction will be surgically undone. The server moves on. You do not.
+      </p>
+      <p>
+        So let's be precise about what griefing on MonumentalMC actually gets you: a <strong>permanent ban</strong>, a complete rollback that erases every trace of your actions, and a permanent reputation as <strong>a degenerate piece of filth</strong> who wasted everyone's time — most of all, your own. You will have accomplished nothing. The math does not work in your favor. <strong>Do not grief. Do not loot. Do not test us.</strong>
+      </p>
+      <div class="verdict-box">
+        <i class="fa-solid fa-gavel"></i>
+        PENALTY: INSTANT PERMANENT BAN — FULL BACKUP RESTORE — NO APPEAL — NO EXCEPTIONS — NO NEGOTIATION
+      </div>
+    </div>
+  </div>
+
+  <!-- PREAMBLE -->
+  <div class="preamble fade-in">
+    <p>
+      You're on this server because you <strong>earned it</strong>. You passed the whitelist. Someone stood behind your name. That already puts you ahead of the average Minecraft player — which, admittedly, is a low bar — but you cleared it. <strong>Congratulations on being at minimum a functioning human being.</strong>
+    </p>
+    <p>
+      These rules are <strong>not suggestions, not vibes, not guidelines</strong>. They are the law of this server, enforced without hesitation by staff who have heard every excuse imaginable and stopped being impressed by any of them. Read every rule. All the way through. Then read them again.
+    </p>
+    <p>
+      "I didn't know" is not a defense. "I didn't read them" is somehow worse. Ignorance of these rules will be treated with exactly the same consequences as deliberate violation — because if you joined this server and didn't read the rules, that is entirely your fault, not ours.
+    </p>
+  </div>
+
+  <!-- MC IMAGE STRIP -->
+  <div class="mc-strip">
+    <div class="mc-strip-item">
+      <img src="https://www.minecraft.net/content/dam/games/minecraft/key-art/MC_The-Wild-Update_540x300.jpg"
+           alt="Minecraft"
+           onerror="this.style.display='none'"/>
+      <div class="mc-strip-fallback" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#003d10;">
+        <i class="fa-solid fa-mountain"></i>
+      </div>
+      <div class="mc-label"><i class="fa-solid fa-hammer" style="margin-right:6px;"></i>BUILD — OR GET OUT</div>
+    </div>
+    <div class="mc-strip-item">
+      <img src="https://www.minecraft.net/content/dam/games/minecraft/key-art/mc-java-edition-360x202.jpg"
+           alt="Minecraft Java"
+           onerror="this.style.display='none'"/>
+      <div class="mc-strip-fallback" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#003d10;">
+        <i class="fa-solid fa-dungeon"></i>
+      </div>
+      <div class="mc-label"><i class="fa-solid fa-dungeon" style="margin-right:6px;"></i>EXPLORE — LEGALLY</div>
+    </div>
+    <div class="mc-strip-item">
+      <img src="https://www.minecraft.net/content/dam/games/minecraft/screenshots/1-21-4-screenshot-1.jpg"
+           alt="Minecraft screenshot"
+           onerror="this.style.display='none'"/>
+      <div class="mc-strip-fallback" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#003d10;">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="mc-label"><i class="fa-solid fa-users" style="margin-right:6px;"></i>RESPECT THE COMMUNITY</div>
+    </div>
+  </div>
+
+  <div class="section-label"><i class="fa-solid fa-scroll"></i> OFFICIAL RULESET — ALL RULES ARE BINDING AND ENFORCED</div>
+
+  <div class="rules-list">
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-handshake"></i></div>
+        <span class="rule-num">01</span>
+        <span class="rule-title">RESPECT EVERY PLAYER</span>
+        <span class="rule-severity sev-warn"><i class="fa-solid fa-triangle-exclamation"></i> WARN → PERM BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>Every person on this server earned their whitelist spot. You will treat them like it. Insults, slurs, targeted harassment, hate speech, doxxing, sustained hostility, or any behavior designed to make another player feel unwelcome is <strong>strictly prohibited</strong>. You are not required to like everyone. You are required to behave like a person with a functioning conscience.</p>
+        <p>This rule extends beyond the server — Discord, linked social media, any platform where you're identifiable as a MonumentalMC member is covered. Your behavior outside the game reflects on this community. If you drag this server's name through the dirt publicly, you will be removed from it privately and without ceremony.</p>
+        <p>There is no "it was just a joke" defense. There is no "they started it." If you cannot handle conflict without resorting to abuse, report it to staff and walk away. That is the only acceptable path forward. Anything else is a violation.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> First offense: formal warning, logged permanently. Second offense: 7-day ban. Third offense: permanent ban. No negotiation at any stage.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-ban"></i></div>
+        <span class="rule-num">02</span>
+        <span class="rule-title">NO CHEATING, HACKING, OR EXPLOITING</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> INSTANT PERM BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>Hacked clients, X-ray texture packs, kill aura, speed hacks, fly hacks, auto-clickers, gameplay macros, duplication glitches, and any exploit that provides an unfair advantage over legitimate players are <strong>all banned without exception</strong>. Every single one. Don't search the list for loopholes — there are none.</p>
+        <p>We have server-side anti-cheat, staff monitoring, and logs that go back further than you'd expect. If you think you found something clever, you didn't. Someone tried it before you and they're not here anymore. If you legitimately discover a bug, <strong>report it immediately</strong>. Players who disclose responsibly are appreciated. Players who exploit are banned.</p>
+        <p><span class="r">"I was just testing it" is not a defense. Playing on an alt is not a workaround. "Educational purposes" is not protection.</span> There is one outcome for cheaters on MonumentalMC: removal, permanent and immediate.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Permanent ban. All associated accounts banned simultaneously. No appeal. No review window. Goodbye.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-comment-slash"></i></div>
+        <span class="rule-num">03</span>
+        <span class="rule-title">NO SPAM, CHAT ABUSE, OR SERVER ADVERTISING</span>
+        <span class="rule-severity sev-mute"><i class="fa-solid fa-volume-xmark"></i> MUTE → PERM BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>Chat exists so players can communicate. Not for flooding, message repetition, wall-of-text dumps, all-caps screaming, or using it as a personal stage for content nobody requested. One message. Say what you mean. If someone ignored your first message, fourteen more will not improve the situation.</p>
+        <p>Advertising other servers in any channel is an <span class="r">instant permanent ban</span>. Not a warning. Not a mute. You are gone immediately. If your server was worth advertising, you wouldn't need to recruit in ours.</p>
+        <p>Passive-aggressive chat behavior — pointed "hints," repeatedly resurfacing resolved conflicts, or using chat as a technically-compliant harassment vector — is still a violation. Staff recognize behavioral patterns. Act accordingly.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Spam: 1hr mute, escalates to permanent mute and ban. Server advertising: instant permanent ban, no exceptions.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-eye-slash"></i></div>
+        <span class="rule-num">04</span>
+        <span class="rule-title">KEEP PUBLIC SPACES APPROPRIATE</span>
+        <span class="rule-severity sev-warn"><i class="fa-solid fa-triangle-exclamation"></i> WARN → BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>Public chat and public builds must be appropriate for a general audience. Explicit content, graphic descriptions, sexual content, or anything that would make a reasonable person immediately uncomfortable just trying to play a block-building game has no place in MonumentalMC's shared spaces.</p>
+        <p>This includes builds. Build something creative. Build something technically impressive. Build something that makes other players stop and say "I have to see that up close." <strong>Do not build something that makes people stop and immediately file a report.</strong> You know the difference between artistic and genuinely problematic. You know exactly which side you're on when you're building it.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Builds removed without warning. Chat: first offense warn, escalates rapidly. Severe or deliberate violations: instant permanent ban.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-house-lock"></i></div>
+        <span class="rule-num">05</span>
+        <span class="rule-title">RESPECT CLAIMED LAND &amp; OTHER PLAYERS' BUILDS</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>Other players have invested real hours — real days — of creative effort into what they've built. You will not steal from their chests, mine their materials, dismantle their structures, flood or burn their property, or interfere with what they've created in any way <strong>without explicit, direct, prior permission from the owner.</strong></p>
+        <p>"I thought it was abandoned" is not valid. "There were no signs" is not valid. "I only took a little" is possibly the least valid thing anyone has ever said on a Minecraft server. <strong>When in doubt, ask staff before touching anything.</strong> We will determine through proper investigation whether a build is abandoned. You do not get to make that judgment call unilaterally with your inventory open.</p>
+        <p>Proximity griefing — placing structures adjacent to another player's claim purely to annoy them, block their expansion, or degrade their experience — is also a violation. It is not subtle. We know exactly what you're doing when you do it.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Structure removed. Items fully restored from backup. Offending player banned — minimum 30 days, up to permanent based on severity.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-swords"></i></div>
+        <span class="rule-num">06</span>
+        <span class="rule-title">NO UNCONSENTED PVP OR TRAPPING</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>This is not an anarchy server. This is not a PvP server. Killing another player without their explicit, direct, verbal agreement is not allowed. "Explicit agreement" means a clear, unambiguous confirmation — not a vague implication, not "they were in a PvP zone," not "they attacked me first after I provoked them for ten minutes."</p>
+        <p>This covers traps in their entirety: pit traps, lava traps, suffocation chambers, drowning contraptions, fall traps — all of it. Using environmental mechanics to kill a non-consenting player is unconsented PvP with extra steps and will be treated identically.</p>
+        <p>Luring newer players under the guise of helping them, showing them around, or offering them items — then killing them for their inventory — is one of the most contemptible things you can do on a whitelist server built on trust. <span class="r">This results in a permanent ban on the first offense.</span> No escalation. No warning. No appeal. You are done here.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Items restored. Offender banned minimum 14 days. Luring or trapping new players: permanent ban, first offense, no exceptions.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-microchip"></i></div>
+        <span class="rule-num">07</span>
+        <span class="rule-title">NO LAG MACHINES OR SERVER-HOSTILE BUILDS</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> REMOVAL + BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>Intentionally — or negligently — constructing redstone contraptions, entity farms, or any structure that degrades server performance is an attack on every player's experience simultaneously. Every tick of lag you introduce is stolen from everyone online. <strong>That is not acceptable under any framing.</strong></p>
+        <p>Large, efficient farms are allowed. Irresponsibly designed, entity-capped, TPS-destroying monstrosities are not. If your farm requires a disclaimer, it needs redesigning. Staff will remove lag machines without prior notice. The builder will be held accountable regardless of stated intent.</p>
+        <p>When uncertain, <strong>ask staff before building</strong>. We will review designs proactively. We would significantly rather give you optimization feedback than watch the server crawl at 3 TPS while tracking down the source.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Immediate removal. First offense: warning + temp ban. Intentional lag machines or repeat offenses: permanent ban.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-user-shield"></i></div>
+        <span class="rule-num">08</span>
+        <span class="rule-title">FOLLOW STAFF INSTRUCTIONS</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>When a staff member gives you an instruction, it is not the opening of a negotiation. It is not an invitation to publicly litigate your case in chat while other players watch. It is an instruction. <strong>Follow it.</strong> If you believe you were treated unfairly, raise a formal dispute through Discord tickets — not public drama, not loud complaints in global chat.</p>
+        <p>Staff volunteer their time to keep this server running. Disrespecting them, publicly undermining their decisions, mocking moderation, or coordinating players against staff actions is a direct violation and will be handled with escalating severity. There is no version of "the staff are corrupt" that ends well for the person saying it in public chat.</p>
+        <p>Misusing /report to harass players you dislike is itself a punishable offense. File honest reports for genuine violations. Repeated false reports as a harassment strategy will result in the reporter being banned before the reported player.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Refusal to comply: immediate temp ban. Repeated insubordination or public undermining of staff: permanent ban.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-user-tag"></i></div>
+        <span class="rule-num">09</span>
+        <span class="rule-title">ONE ACCOUNT PER PLAYER — NO EXCEPTIONS</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> ALL ACCOUNTS BANNED</span>
+      </div>
+      <div class="rule-body">
+        <p>You receive one whitelist slot, one account, and one identity on MonumentalMC. Using alternate accounts to evade bans, double-farm resources, or circumvent any restriction placed on your main account will result in <strong>every associated account being permanently banned simultaneously</strong> with no individual review.</p>
+        <p>We find alts. Every single time. Server logs, IP analysis, play pattern matching, behavioral correlation — the methods are numerous and thoroughly tested. "It's my sibling's account" has been attempted more times than staff can count. The answer has never once been "oh, understood, carry on."</p>
+        <p>If someone in your household legitimately plays on MonumentalMC, contact staff proactively with context before either account logs in. We have a verification process for shared households. We are reasonable people. What we are not is naive.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> All identified accounts permanently banned. IP flagged. No appeal process available for alt abuse. All accounts gone, simultaneously, permanently.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+        <span class="rule-num">10</span>
+        <span class="rule-title">NO REAL-MONEY TRADING</span>
+        <span class="rule-severity sev-ban"><i class="fa-solid fa-skull"></i> INSTANT PERM BAN</span>
+      </div>
+      <div class="rule-body">
+        <p>In-game items, resources, land claims, server accounts, and any form of in-game advantage on MonumentalMC carry <strong>no real-world monetary value</strong> and may not be bought, sold, or exchanged for real money under any circumstances. This includes trades via gift cards, third-party platforms, cryptocurrency, or any other medium of real-world value.</p>
+        <p>RMT scams are extremely common and staff have zero capacity — and zero obligation — to mediate disputes involving real currency. If you engage in real-money trading and get scammed, you have no recourse here. You created a situation we explicitly told you not to create. You will also be banned for creating it, scammed or not.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> All parties involved: instant permanent ban. The transaction itself is the violation. Outcome irrelevant.</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-header">
+        <div class="rule-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="rule-num">11</span>
+        <span class="rule-title">USE COMMON SENSE</span>
+        <span class="rule-severity sev-case"><i class="fa-solid fa-scale-balanced"></i> STAFF DISCRETION</span>
+      </div>
+      <div class="rule-body">
+        <p>No ruleset — however thorough — can anticipate every possible way a determined person might decide to make things worse for everyone around them. This rule exists for those gaps. If something is <strong>obviously and self-evidently wrong</strong> — if you'd be embarrassed to describe it to staff, if you had to convince yourself it technically wasn't against the rules — it probably is, and staff will act accordingly.</p>
+        <p><span class="w">"The rules don't technically say I can't—"</span> is a sentence that has ended many promising server careers. We've heard it before. It didn't work then either.</p>
+        <p>The spirit of all of this is simple: <span class="g">build things, treat people well, and make this server better by being on it.</span> Everything else is just elaboration on what "treat people well" looks like in practice. If you're genuinely uncertain about something, ask staff before doing it. We are accessible, and we would much rather answer a question than clean up an aftermath.</p>
+        <div class="penalty-box"><i class="fa-solid fa-gavel"></i> Penalties at staff discretion based on severity, intent, and history. Good faith always considered. Bad faith never forgiven.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <i class="fa-solid fa-cube" style="color:var(--green);margin-right:8px;"></i>MONUMENTALMC<br>
+        <span style="font-size:6px;opacity:0.5;font-family:'Share Tech Mono',monospace;">play.monumentalmc.online</span>
+      </div>
+      <div class="footer-note">
+        <i class="fa-solid fa-clock" style="margin-right:6px;"></i>Ruleset v2.0 — 2026 — Subject to update without notice
+      </div>
+    </div>
+    <div class="footer-agreement">
+      <i class="fa-solid fa-circle-check"></i>
+      By connecting to MonumentalMC you confirm you have read, understood, and agreed to every rule on this page in its entirety. Ignorance is not a defense. Welcome to the server — don't make us regret whitelisting you.
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
